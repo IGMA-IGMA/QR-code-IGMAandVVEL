@@ -15,7 +15,7 @@ def creating_QR_code(link: str):
     img.save(f'static/imagesQR/images_save/{l + 1}.png')
     try:
         print('Успешно')
-        return f'static/imagesQR/images_save/{l + 1}.png'
+        return f'imagesQR/images_save/{l + 1}.png'
     except:
         return 'SaveError'
 

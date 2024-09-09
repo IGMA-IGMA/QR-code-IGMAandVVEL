@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, send_from_directory
 import creatDIR
 import craft
-
+import os
 app = Flask(__name__)
 
 
@@ -28,12 +28,10 @@ def erroe404(error, ):
 
 
 @app.route('/submit', methods=["GET", "POST"])
-def submit():
+def submit(trip_img='static/site_images/img.png'):
     link = request.form.get('user_input')
-    craft.creating_QR_code(link)
-    return render_template("creatingQR-code.html", link=link)
-
-
+    trip_img = craft.creating_QR_code(link)
+    return render_template("creatingQR-code.html", link=link, trip_img=trip_img)
 
 
 if __name__ == "__main__":
