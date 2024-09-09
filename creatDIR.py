@@ -10,4 +10,5 @@ def creat_DIR():
 
 
 def delit_DIR():
-    shutil.rmtree('imagesQR')
+    if os.path.isdir("imagesQR"):
+        shutil.rmtree('imagesQR')
