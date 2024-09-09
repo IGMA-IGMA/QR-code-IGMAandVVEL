@@ -45,4 +45,3 @@ def recognize_qr_code_and_print_link(image_path: str):
         return 'QR-code not founded'
 
 
-recognize_qr_code_and_print_link('image_save/img.png')
