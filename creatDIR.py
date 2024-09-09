@@ -3,12 +3,12 @@ import shutil
 
 
 def creat_DIR():
-    if not os.path.isdir("imagesQR"):
-        os.mkdir('imagesQR')
-        os.mkdir('imagesQR/images_save')
-        os.mkdir('imagesQR/images_open')
+    if not os.path.isdir("static/imagesQR"):
+        os.mkdir('static/imagesQR')
+        os.mkdir('static/imagesQR/images_save')
+        os.mkdir('static/imagesQR/images_open')
 
 
 def delit_DIR():
-    if os.path.isdir("imagesQR"):
-        shutil.rmtree('imagesQR')
+    if os.path.isdir("static/imagesQR"):
+        shutil.rmtree('static/imagesQR')

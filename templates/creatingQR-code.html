@@ -7,7 +7,14 @@
 <body>
 <h1>Создавай QR-code для чего угодно</h1>
 </body>
-<form
-<input type="url" placeholder="Type your">
+
+<form action="/submit" method="POST">
+    <label for="user_input">Ваша ссылка: </label>
+    <input type="text" id="user_input" name="user_input">
+    <button type="submit">Отправить</button>
+</form>
+<h1>Ваш QR-code: {{ link }}</h1>
+
+<img src= "{{url_for('static', filename='imagesQR/images_save/1.png')}}" width="500" height="500">
 
 </html>
