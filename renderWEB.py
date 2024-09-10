@@ -28,10 +28,10 @@ def erroe404(error, ):
 
 
 @app.route('/submit', methods=["GET", "POST"])
-def submit(trip_img='static/site_images/img.png'):
+def submit():
     link = request.form.get('user_input')
-    trip_img = craft.creating_QR_code(link)
-    return render_template("creatingQR-code.html", link=link, trip_img=trip_img)
+    inf_about_QR = craft.creating_QR_code(link)
+    return render_template("creatingQR-code.html", trip_img=inf_about_QR[0], status_gen=inf_about_QR[1])
 
 
 if __name__ == "__main__":
