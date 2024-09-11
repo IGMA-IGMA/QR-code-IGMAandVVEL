@@ -20,6 +20,7 @@ def creating_QR_code(link: str):
         return 'site_images/ErrorGenerate.png', 'Generate Error'
 
 
-# def recognize_qr_code_and_print_link(image_path: str):
-#
+def recognize_qr_code_and_print_link(image_path: str):
+    pass
+
 
