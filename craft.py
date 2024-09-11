@@ -1,10 +1,10 @@
 import qrcode
+import cv2
 import os
 import os.path
 
 
 def creating_QR_code(link: str):
-
     if len(link) == 0 or link == ' ':
         print('Переданно пустое значение')
         return 'site_images/ErrorGenerate.png', 'Generate Error'
@@ -20,6 +20,15 @@ def creating_QR_code(link: str):
         return 'site_images/ErrorGenerate.png', 'Generate Error'
 
 
-# def recognize_qr_code_and_print_link(image_path: str):
-#
+def recognize_qr_code_and_print_link(image_path: str):
 
+    img = cv2.imread(image_path)
+
+    qr_code_detector = cv2.QRCodeDetector()
+
+    data, bbox, _ = qr_code_detector.detectAndDecode(img)
+
+    if data:
+        return data, True
+    else:
+        return "QR-code not found", False
