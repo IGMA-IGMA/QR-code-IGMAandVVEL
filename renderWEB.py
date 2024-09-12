@@ -48,8 +48,11 @@ def upload():
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
+        #print(f"static/imagesQR/images_open/{filename}")
+        link, status = craft.recognize_qr_code_and_print_link(f"static/imagesQR/images_open/{filename}")
+        print(link)
 
-    return render_template("recognizeQR-code.html")
+    return render_template("upload.html", link=link)
 
 
 
