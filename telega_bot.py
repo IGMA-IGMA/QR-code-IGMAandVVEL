@@ -1,14 +1,12 @@
 import telebot
 import craft
+import token
 
 
-# Вставь сюда свой токен от BotFather
-API_TOKEN = '6501255192:AAGa6lHliMwht7N4tDpP58v-4ARydruk0yk'
+API_TOKEN = token.Token
 
-# Создаем экземпляр бота
 bot = telebot.TeleBot(API_TOKEN)
 
-# Обработчик команды /start
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     Hello_text = """
@@ -24,7 +22,6 @@ def send_welcome(message):
     """
     bot.reply_to(message, Hello_text)
 
-# Обработчик команды /help
 @bot.message_handler(commands=['help'])
 def send_help(message):
     opis = """
@@ -38,9 +35,7 @@ def send_image(message):
     # Путь к изображению, которое будет отправлено
     image_path = 'path/to/your/image.jpg'
 
-    # Открываем изображение в режиме чтения байтов
     with open(image_path, 'rb') as image:
-        # Отправляем изображение в ответ на текстовое сообщение
         bot.send_photo(message.chat.id, image)
 
 # Запуск бота

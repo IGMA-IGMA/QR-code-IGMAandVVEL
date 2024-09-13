@@ -1,3 +1,9 @@
+import os
+
+file_name, file_extension = os.path.splitext("craft.py")
+
+print(file_name)
+print(file_extension)
 from pyzbar.pyzbar import decode
 from PIL import Image
 
