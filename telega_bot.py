@@ -1,31 +1,49 @@
+import telebot
+import craft
 
-
-
-import logging
-from aiogram import Bot, Dispatcher, types
-from aiogram.types import Message
-from aiogram.utils import executor
 
 # Вставь сюда свой токен от BotFather
 API_TOKEN = '6501255192:AAGa6lHliMwht7N4tDpP58v-4ARydruk0yk'
 
-# Настраиваем логирование
-logging.basicConfig(level=logging.INFO)
+# Создаем экземпляр бота
+bot = telebot.TeleBot(API_TOKEN)
 
-# Создаем объекты бота и диспетчера
-bot = Bot(token=API_TOKEN)
-dp = Dispatcher(bot)
+# Обработчик команды /start
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    Hello_text = """
+    👨‍💻 **Команда IGMA and VVEL** 👨‍💻
 
-# Хэндлер для команды /start
-@dp.message_handler(commands=['start'])
-async def send_welcome(message: types.Message):
-    await message.reply("Привет! Я бот на Aiogram!")
+    Мы — команда юных разработчиков, которая занимается разработкой инновационных решений для работы с QR-кодами. Наш проект нацелен на создание удобных и эффективных инструментов для генерации и распознавания QR-кодов.
 
-# Хэндлер для любого текстового сообщения
-@dp.message_handler()
-async def echo(message: types.Message):
-    await message.answer(message.text)
+    📲 **Чем мы занимаемся:**
+    - **Создание QR-кодов:** Простой и быстрый способ создания уникальных QR-кодов для ваших нужд.
+    - **Распознавание QR-кодов:** Мгновенное сканирование и расшифровка QR-кодов, будь то текст, ссылки или другая информация.
+
+    Мы стремимся сделать работу с QR-кодами простой, доступной и удобной для всех. Следите за нашими обновлениями и новыми функциями!
+    """
+    bot.reply_to(message, Hello_text)
+
+# Обработчик команды /help
+@bot.message_handler(commands=['help'])
+def send_help(message):
+    opis = """
+    Текст с помощью
+    """
+    bot.reply_to(message.text, opis)
+
+
+@bot.message_handler(func=lambda message: True)
+def send_image(message):
+    # Путь к изображению, которое будет отправлено
+    image_path = 'path/to/your/image.jpg'
+
+    # Открываем изображение в режиме чтения байтов
+    with open(image_path, 'rb') as image:
+        # Отправляем изображение в ответ на текстовое сообщение
+        bot.send_photo(message.chat.id, image)
 
 # Запуск бота
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+    bot.infinity_polling()
+
