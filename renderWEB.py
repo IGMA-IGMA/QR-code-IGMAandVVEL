@@ -16,7 +16,7 @@ def home_page():
 
 @app.route("/Creating QR-code", methods=["GET", "POST"])
 def creating():
-    print(request.form.get('link'))
+    print(request.form.get("link"))
     return render_template("creatingQR-code.html")
 
 
@@ -27,29 +27,29 @@ def recognize():
 
 @app.errorhandler(404)
 def error404(error):
-    return render_template('page404.html', error=error)
+    return render_template("page404.html", error=error)
 
 
-@app.route('/submit', methods=["GET", "POST"])
+@app.route("/submit", methods=["GET", "POST"])
 def submit():
-    link = request.form.get('user_input')
-    inf_about_QR = craft.creating_QR_code(link, 'w')
+    link = request.form.get("user_input")
+    inf_about_QR = craft.creating_QR_code(link, "w")
     return render_template("creatingQR-code.html", trip_img=inf_about_QR[0], status_gen=inf_about_QR[1])
 
-@app.route('/upload', methods=["GET", "POST"])
+@app.route("/upload", methods=["GET", "POST"])
 def upload():
 
-    UPLOAD_FOLDER = 'static/imagesQR/images_open'
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    UPLOAD_FOLDER = "static/imagesQR/images_open"
+    app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
     if request.method == "POST":
         file = request.files["image"]
 
         filename = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
         file.save(file_path)
         #print(f"static/imagesQR/images_open/{filename}")
-        link, status = craft.recognize_qr_code_and_print_link(f"static/imagesQR/images_open/{filename}", 'w')
+        link, status = craft.recognize_qr_code_and_print_link(f"static/imagesQR/images_open/{filename}", "w")
         print(link)
 
     return render_template("upload.html", link=link)
