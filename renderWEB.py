@@ -59,8 +59,8 @@ def upload():
 
 if __name__ == "__main__":
 
-    creatDIR.creat_DIR()
+    creatDIR.creat_DIR_site()
 
     app.run(debug=True, port=1000)
 
-    creatDIR.delit_DIR()
+    creatDIR.delit_DIR_site()
