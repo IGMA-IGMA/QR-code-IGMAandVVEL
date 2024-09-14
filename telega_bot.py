@@ -10,7 +10,7 @@ bot = telebot.TeleBot(API_TOKEN)
 
 
 
-
+#USER_COMMAND
 @bot.message_handler(commands=["start"])
 def send_welcome(message):
     Hello_text = """
@@ -34,30 +34,44 @@ def send_help(message):
     """
     bot.send_message(message.chat.id, help)
 
+
+#ADMIN_COMMAND
 @bot.message_handler(commands=["229343"])
 def ADMIN_ADD(message):
-    inf_new_adm = {str(message.chat.username): str(message.chat.id)}
-    admin.add_to_json("id_admin.json", inf_new_adm)
-    bot.send_message(message.chat.id, "Вас занесли в Root-room\nКоманды доступные вам:\t /help")
+    inf_new_adm = {str(message.chat.id): str(message.chat.username)}
+    admin.add_to_json(inf_new_adm)
+    bot.send_message(message.chat.id, "Вас занесли в Root-room\nКоманды доступные вам:\n /clean_db_image_save \n /stop_bot")
 
 
-
-
-@bot.message_handler(commands=["clean_db"])
+@bot.message_handler(commands=["clean_db_image_save"])
 def handle_clean_db(message):
-    chat_id = message.chat.id
-    if str(chat_id) in ["1185507660", "1077355845", "959742702"]:
+    chat_id = str(message.chat.id)
+    if admin.user_is_admin(chat_id):
         print("Начал")
         perech = creatDIR.clean_directory("telega_db/imagesQR/images_save")
         bot.send_message(chat_id, perech)
 
 
+@bot.message_handler(commands=["stop_bot"])
+def stop_bot(message):
+    chat_id = str(message.chat.id)
+    if admin.user_is_admin(chat_id):
+        bot.stop_bot()
+    bot.send_message(chat_id, 'Вы вызвали не существующую команду')
+
+
+
+
+
+
+#USER_exp
 @bot.message_handler(content_types=["text"])
 def create_QR(message):
     image_path = craft.creating_QR_code(message.text, "t")
     with open(image_path, "rb") as image:
         bot.send_photo(chat_id=message.chat.id, photo=image)
     image.close()
+
 
 
 @bot.message_handler(content_types=["photo"])
@@ -76,7 +90,6 @@ def reqognize(message):
 
     bot.send_message(message.chat.id, link)
 
-#"Olyvel": "959742702"
 
 # Запуск бота
 if __name__ == "__main__":

@@ -30,15 +30,17 @@ def delit_DIR_telega():
 
 #ADMIN ROOT
 def clean_directory(directory_path):
-    perechisl = ""
-    # Проходим по содержимому директории
-    for filename in os.listdir(directory_path):
-        file_path = os.path.join(directory_path, filename)
-        # Удаляем файлы
-        if os.path.isfile(file_path) or os.path.islink(file_path):
-            os.unlink(file_path)
-            perechisl += f"\t{file_path}"
-
-            print(f"Файл {file_path} удален.")
-    return perechisl
+    l = len(os.listdir(directory_path))
+    if l:
+        perechisl = ""
+        # Проходим по содержимому директории
+        for filename in os.listdir(directory_path):
+            file_path = os.path.join(directory_path, filename)
+            # Удаляем файлы
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+                perechisl += (file_path + '\n')
+                print(f"Файл {file_path} удален.")
+        return perechisl
+    return f"Запись данных в {directory_path} не было"
 
