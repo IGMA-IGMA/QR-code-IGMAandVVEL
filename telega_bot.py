@@ -9,8 +9,7 @@ API_TOKEN = my_token.Token
 bot = telebot.TeleBot(API_TOKEN)
 
 
-
-#USER_COMMAND
+# USER_COMMAND
 @bot.message_handler(commands=["start"])
 def send_welcome(message):
     Hello_text = """
@@ -35,12 +34,13 @@ def send_help(message):
     bot.send_message(message.chat.id, help)
 
 
-#ADMIN_COMMAND
+# ADMIN_COMMAND
 @bot.message_handler(commands=["229343"])
 def ADMIN_ADD(message):
     inf_new_adm = {str(message.chat.id): str(message.chat.username)}
     admin.add_to_json(inf_new_adm)
-    bot.send_message(message.chat.id, "Вас занесли в Root-room\nКоманды доступные вам:\n /clean_db_image_save \n /stop_bot")
+    bot.send_message(message.chat.id,
+                     "Вас занесли в Root-room\nКоманды доступные вам:\n /clean_db_image_save \n /stop_bot")
 
 
 @bot.message_handler(commands=["clean_db_image_save"])
@@ -60,11 +60,21 @@ def stop_bot(message):
     bot.send_message(chat_id, 'Вы вызвали не существующую команду')
 
 
+@bot.message_handler(commands=["spisok_admin"])
+def sending_list_admins(message):
+    chat_id = str(message.chat.id)
+
+    if admin.user_is_admin(chat_id):
+        spisok = admin.spisok_admin()
+
+        with open("id_admin.json", "rb") as file_admin:
+            bot.send_document(chat_id, file_admin)
+        file_admin.close()
+
+        bot.send_message(chat_id, spisok)
 
 
-
-
-#USER_exp
+# USER_exp
 @bot.message_handler(content_types=["text"])
 def create_QR(message):
     image_path = craft.creating_QR_code(message.text, "t")
@@ -73,20 +83,18 @@ def create_QR(message):
     image.close()
 
 
-
 @bot.message_handler(content_types=["photo"])
 def reqognize(message):
     fileID = message.photo[-1].file_id
     file_info = bot.get_file(fileID)
     downloaded_file = bot.download_file(file_info.file_path)
     l = len(os.listdir("telega_db/imagesQR/images_open"))
-    image_path = f"telega_db/imagesQR/images_open/{l+1}.jpg"
+    image_path = f"telega_db/imagesQR/images_open/{l + 1}.jpg"
     with open(image_path, "wb") as new_file:
         new_file.write(downloaded_file)
     new_file.close()
 
     link, _ = craft.recognize_qr_code_and_print_link(image_path)
-
 
     bot.send_message(message.chat.id, link)
 
@@ -99,5 +107,3 @@ if __name__ == "__main__":
         creatDIR.delit_DIR_telega()
     except:
         creatDIR.delit_DIR_telega()
-
-

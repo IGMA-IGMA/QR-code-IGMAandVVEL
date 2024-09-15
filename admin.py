@@ -40,6 +40,15 @@ def user_is_admin(chat_id: str) -> bool:
     json_file.close()
     return chat_id in data
 
+def spisok_admin():
+    with open("id_admin.json", "r", encoding="utf-8") as json_file:
+        file = json.load(json_file)
+    data = []
+    for i, (user_id, username) in enumerate(file.items(), 0):
+        data.append(f"{i}. {user_id}: {username}")
+    data = "\n".join(data)
+    return data
+
 
 
 
