@@ -24,6 +24,7 @@ def send_welcome(message):
     Мы стремимся сделать работу с QR-кодами простой, доступной и удобной для всех. Следите за нашими обновлениями и новыми функциями!
     """
     bot.reply_to(message, Hello_text)
+    admin.add_to_json("id_user.json", {str(message.chat.id): str(message.chat.username)})
 
 
 @bot.message_handler(commands=["help"])
@@ -38,18 +39,31 @@ def send_help(message):
 @bot.message_handler(commands=["229343"])
 def ADMIN_ADD(message):
     inf_new_adm = {str(message.chat.id): str(message.chat.username)}
-    admin.add_to_json(inf_new_adm)
+    admin.add_to_json("id_admin.json", inf_new_adm)
     bot.send_message(message.chat.id,
                      "Вас занесли в Root-room\nКоманды доступные вам:\n /clean_db_image_save \n /stop_bot")
 
 
 @bot.message_handler(commands=["clean_db_image_save"])
-def handle_clean_db(message):
+def clean_db_image_save(message):
     chat_id = str(message.chat.id)
     if admin.user_is_admin(chat_id):
-        print("Начал")
         perech = creatDIR.clean_directory("telega_db/imagesQR/images_save")
         bot.send_message(chat_id, perech)
+
+@bot.message_handler(commands=["clean_db_image_open"])
+def clean_db_image_open(message):
+    chat_id = str(message.chat.id)
+    if admin.user_is_admin(chat_id):
+        perech = creatDIR.clean_directory("telega_db/imagesQR/images_save")
+        bot.send_message(chat_id, perech)
+
+
+
+
+
+
+
 
 
 @bot.message_handler(commands=["stop_bot"])
@@ -72,6 +86,8 @@ def sending_list_admins(message):
         file_admin.close()
 
         bot.send_message(chat_id, spisok)
+
+
 
 
 # USER_exp
