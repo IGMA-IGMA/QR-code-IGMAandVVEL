@@ -1,9 +1,11 @@
 import telebot
+from telebot import types
 import craft
 import my_token
 import creatDIR
 import admin
 import os
+import URLaddress
 
 API_TOKEN = my_token.Token
 bot = telebot.TeleBot(API_TOKEN)
@@ -24,15 +26,53 @@ def send_welcome(message):
     Мы стремимся сделать работу с QR-кодами простой, доступной и удобной для всех. Следите за нашими обновлениями и новыми функциями!
     """
     bot.reply_to(message, Hello_text)
-    admin.add_to_json("id_user.json", {str(message.chat.id): str(message.chat.username)})
+    if not admin.user_in_dbUser(message.chat.id):
+        admin.add_to_json("id_user.json", {str(message.chat.id): [str(message.chat.username), ["black", "290", "290"]]})
+    else:
+        print('Пользователь уже в BD')
 
 
 @bot.message_handler(commands=["help"])
 def send_help(message):
     help = """
-    Бот для создания 
+    Бот для создания QR
     """
     bot.send_message(message.chat.id, help)
+
+
+@bot.message_handler(commands=['QR_setting'])
+def qr_setting_command(message):
+    # Отправляем сообщение с подтверждением
+    bot.send_message(message.chat.id, "Действительно хотите изменить настройки создания QR-кода? (да/нет)")
+    bot.register_next_step_handler(message, process_confirmation)
+
+
+def process_confirmation(message):
+    if message.text.lower() == 'да':
+        bot.send_message(message.chat.id,
+                         "Введите ширину и длину картинки, а затем цвет заднего фона (формат: ширина длина цвет).")
+        bot.register_next_step_handler(message, process_dimensions)
+    elif message.text.lower() == 'нет':
+        bot.send_message(message.chat.id, "Настройки не изменены.")
+    else:
+        bot.send_message(message.chat.id, "Пожалуйста, ответьте 'да' или 'нет'.")
+        bot.register_next_step_handler(message, process_confirmation)
+
+
+def process_dimensions(message):
+    try:
+        width, height, background_color = message.text.split()
+        width = int(width)
+        height = int(height)
+
+        # Здесь можно добавить код для изменения настроек QR-кода с указанными параметрами
+
+        bot.send_message(message.chat.id,
+                         f"Настройки QR-кода обновлены: ширина={width}, длина={height}, цвет фона={background_color}.")
+    except ValueError:
+        bot.send_message(message.chat.id,
+                         "Некорректный формат. Введите ширину, длину и цвет фона (формат: ширина длина цвет).")
+        bot.register_next_step_handler(message, process_dimensions)
 
 
 # ADMIN_COMMAND
@@ -51,19 +91,13 @@ def clean_db_image_save(message):
         perech = creatDIR.clean_directory("telega_db/imagesQR/images_save")
         bot.send_message(chat_id, perech)
 
+
 @bot.message_handler(commands=["clean_db_image_open"])
 def clean_db_image_open(message):
     chat_id = str(message.chat.id)
     if admin.user_is_admin(chat_id):
         perech = creatDIR.clean_directory("telega_db/imagesQR/images_save")
         bot.send_message(chat_id, perech)
-
-
-
-
-
-
-
 
 
 @bot.message_handler(commands=["stop_bot"])
@@ -88,14 +122,17 @@ def sending_list_admins(message):
         bot.send_message(chat_id, spisok)
 
 
-
-
 # USER_exp
 @bot.message_handler(content_types=["text"])
 def create_QR(message):
+    chat_id = message.chat.id
     image_path = craft.creating_QR_code(message.text, "t")
     with open(image_path, "rb") as image:
-        bot.send_photo(chat_id=message.chat.id, photo=image)
+        url_image = URLaddress.upload_image_to_fileio(image_path)
+        teg_img = f""
+        bot.send_photo(chat_id=chat_id, photo=image)
+        bot.send_message(chat_id=chat_id, text=url_image)
+
     image.close()
 
 

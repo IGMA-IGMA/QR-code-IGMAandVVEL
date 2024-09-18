@@ -33,15 +33,19 @@ def add_to_json(file_path, new_data):
         print(f"Произошла ошибка: {e}")
 
 
-
-
-
-
 def user_is_admin(chat_id: str) -> bool:
     with open("id_admin.json", "r", encoding="utf-8") as json_file:
         data = json.load(json_file)
     json_file.close()
     return chat_id in data
+
+
+def user_in_dbUser(chat_id: str) -> bool:
+    with open("id_user.json", "r", encoding="utf-8") as json_file:
+        data = json.load(json_file)
+    json_file.close()
+    return chat_id in data
+
 
 def spisok_admin():
     with open("id_admin.json", "r", encoding="utf-8") as json_file:
@@ -53,8 +57,5 @@ def spisok_admin():
     return data
 
 
-
-
-
-
-
+def update_setting_user(chat_id, width, height):
+    pass
