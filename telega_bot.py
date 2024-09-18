@@ -1,5 +1,4 @@
 import telebot
-from telebot import types
 import craft
 import my_token
 import creatDIR
@@ -27,7 +26,7 @@ def send_welcome(message):
     """
     bot.reply_to(message, Hello_text)
     if not admin.user_in_dbUser(message.chat.id):
-        admin.add_to_json("id_user.json", {str(message.chat.id): [str(message.chat.username), ["black", "290", "290"]]})
+        admin.add_to_json("db_user_tg/id_user.json", {str(message.chat.id): [str(message.chat.username), ["black", "290", "290"]]})
     else:
         print('Пользователь уже в BD')
 
@@ -79,7 +78,7 @@ def process_dimensions(message):
 @bot.message_handler(commands=["229343"])
 def ADMIN_ADD(message):
     inf_new_adm = {str(message.chat.id): str(message.chat.username)}
-    admin.add_to_json("id_admin.json", inf_new_adm)
+    admin.add_to_json("db_user_tg/id_admin.json", inf_new_adm)
     bot.send_message(message.chat.id,
                      "Вас занесли в Root-room\nКоманды доступные вам:\n /clean_db_image_save \n /stop_bot")
 
@@ -115,7 +114,7 @@ def sending_list_admins(message):
     if admin.user_is_admin(chat_id):
         spisok = admin.spisok_admin()
 
-        with open("id_admin.json", "rb") as file_admin:
+        with open("db_user_tg/id_admin.json", "rb") as file_admin:
             bot.send_document(chat_id, file_admin)
         file_admin.close()
 

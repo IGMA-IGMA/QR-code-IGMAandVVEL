@@ -34,21 +34,21 @@ def add_to_json(file_path, new_data):
 
 
 def user_is_admin(chat_id: str) -> bool:
-    with open("id_admin.json", "r", encoding="utf-8") as json_file:
+    with open("db_user_tg/id_admin.json", "r", encoding="utf-8") as json_file:
         data = json.load(json_file)
     json_file.close()
     return chat_id in data
 
 
 def user_in_dbUser(chat_id: str) -> bool:
-    with open("id_user.json", "r", encoding="utf-8") as json_file:
+    with open("db_user_tg/id_user.json", "r", encoding="utf-8") as json_file:
         data = json.load(json_file)
     json_file.close()
     return chat_id in data
 
 
 def spisok_admin():
-    with open("id_admin.json", "r", encoding="utf-8") as json_file:
+    with open("db_user_tg/id_admin.json", "r", encoding="utf-8") as json_file:
         file = json.load(json_file)
     data = []
     for i, (user_id, username) in enumerate(file.items(), 0):
@@ -58,7 +58,7 @@ def spisok_admin():
 
 
 def update_setting_user(chat_id, color, width, height):
-    with open("id_user.json", "r", encoding="utf-8") as json_file:
+    with open("db_user_tg/id_user.json", "r", encoding="utf-8") as json_file:
         data = json.load(json_file)
 
     new_values = [color, width, height]
@@ -67,6 +67,6 @@ def update_setting_user(chat_id, color, width, height):
 
     print(json.dumps(data, indent=4))
 
-    with open("id_user.json", "w") as file:
+    with open("db_user_tg/id_user.json", "w") as file:
         json.dump(data, file, indent=4)
     print("Значение обновленно")

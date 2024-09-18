@@ -1,17 +1,33 @@
-import json
+import telebot
+from telebot import types
+
+# Ваш токен от BotFather
+TOKEN = "6501255192:AAGa6lHliMwht7N4tDpP58v-4ARydruk0yk"
+bot = telebot.TeleBot(TOKEN)
 
 
-def update_setting_user(chat_id, color, width, height):
-    with open("id_user.json", "r", encoding="utf-8") as json_file:
-        data = json.load(json_file)
+# Команда /start
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    # Создаем инлайн-клавиатуру
+    markup = types.InlineKeyboardMarkup(row_width=2)
 
-    new_values = [color, width, height]
+    # Добавляем инлайн-кнопки с callback_data
+    btn1 = types.InlineKeyboardButton("Кнопка 1", callback_data="btn1")
+    btn2 = types.InlineKeyboardButton("Кнопка 2", callback_data="btn2")
+    markup.add(btn1, btn2)
 
-    data[chat_id][1] = new_values
+    bot.send_message(message.chat.id, "Нажмите на кнопку:", reply_markup=markup)
 
-    print(json.dumps(data, indent=4))
 
-    with open("id_user.json", "w") as file:
-        json.dump(data, file, indent=4)
-    print("Значение обновленно")
+# Обработка нажатий на инлайн-кнопки
+@bot.callback_query_handler(func=lambda call: True)
+def handle_callback(call):
+    if call.data == "btn1":
+        bot.send_message(call.message.chat.id, "Вы нажали кнопку 1")
+    elif call.data == "btn2":
+        bot.send_message(call.message.chat.id, "Вы нажали кнопку 2")
 
+
+# Запуск бота
+bot.polling(none_stop=True)
