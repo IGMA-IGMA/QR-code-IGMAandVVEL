@@ -50,7 +50,7 @@ def qr_setting_command(message):
 def process_confirmation(message):
     if message.text.lower() == 'да':
         bot.send_message(message.chat.id,
-                         "Введите ширину и длину картинки, а затем цвет заднего фона (формат: ширина длина цвет).")
+                         "Введите ширину и длину картинки, а затем цвет заднего фона (формат: цвет ширина длина ).")
         bot.register_next_step_handler(message, process_dimensions)
     elif message.text.lower() == 'нет':
         bot.send_message(message.chat.id, "Настройки не изменены.")
@@ -61,14 +61,14 @@ def process_confirmation(message):
 
 def process_dimensions(message):
     try:
-        width, height, background_color = message.text.split()
-        width = int(width)
-        height = int(height)
+        chat_id = str(message.chat.id)
+        color, width, height = message.text.split()
 
-        # Здесь можно добавить код для изменения настроек QR-кода с указанными параметрами
+
+        admin.update_setting_user(chat_id, color, width, height)
 
         bot.send_message(message.chat.id,
-                         f"Настройки QR-кода обновлены: ширина={width}, длина={height}, цвет фона={background_color}.")
+                         f"Настройки QR-кода обновлены: ширина={width}, длина={height}.")
     except ValueError:
         bot.send_message(message.chat.id,
                          "Некорректный формат. Введите ширину, длину и цвет фона (формат: ширина длина цвет).")

@@ -1,11 +1,17 @@
-import mysql.connector
-
-pymysql.connect(db='base', user='root', passwd='pwd', unix_socket="/tmp/mysql.sock")
+import json
 
 
-mycursor = mydb.cursor()
+def update_setting_user(chat_id, color, width, height):
+    with open("id_user.json", "r", encoding="utf-8") as json_file:
+        data = json.load(json_file)
 
-mycursor.execute("SHOW DATABASES")
+    new_values = [color, width, height]
 
-for x in mycursor:
-  print(x)
+    data[chat_id][1] = new_values
+
+    print(json.dumps(data, indent=4))
+
+    with open("id_user.json", "w") as file:
+        json.dump(data, file, indent=4)
+    print("Значение обновленно")
+

@@ -2,25 +2,17 @@
     "id": [
         "username",
         [
+            "color",
             "width",
-            "length",
-            "color"
+            "height"
         ]
     ],
     "1185507660": [
         "IGMAos",
         [
-            "black",
-            "290",
-            "290"
-        ]
-    ],
-    "1086035762": [
-        "Gopro444",
-        [
-            "black",
-            "290",
-            "290"
+            "red",
+            "1",
+            "3"
         ]
     ]
 }
