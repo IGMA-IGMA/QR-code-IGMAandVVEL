@@ -1,8 +1,9 @@
 import telebot
 from telebot import types
+import my_token
 
 # Ваш токен от BotFather
-TOKEN = "6501255192:AAGa6lHliMwht7N4tDpP58v-4ARydruk0yk"
+TOKEN = my_token.Token
 bot = telebot.TeleBot(TOKEN)
 
 

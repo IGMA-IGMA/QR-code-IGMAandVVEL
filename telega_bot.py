@@ -13,6 +13,7 @@ bot = telebot.TeleBot(API_TOKEN)
 # USER_COMMAND
 @bot.message_handler(commands=["start"])
 def send_welcome(message):
+    chat_id = message.chat.id
     Hello_text = """
     👨‍💻 **Команда IGMA and VVEL** 👨‍💻
 
@@ -25,8 +26,9 @@ def send_welcome(message):
     Мы стремимся сделать работу с QR-кодами простой, доступной и удобной для всех. Следите за нашими обновлениями и новыми функциями!
     """
     bot.reply_to(message, Hello_text)
-    if not admin.user_in_dbUser(message.chat.id):
-        admin.add_to_json("db_user_tg/id_user.json", {str(message.chat.id): [str(message.chat.username), ["black", "290", "290"]]})
+    if not admin.user_in_dbUser(str(chat_id)):
+        admin.add_to_json("db_user_tg/id_user.json",
+                          {str(message.chat.id): [str(message.chat.username), {"COLOR": "black", "WIDTH": "290", "HEIGHT": "290"}]})
     else:
         print('Пользователь уже в BD')
 
@@ -39,39 +41,44 @@ def send_help(message):
     bot.send_message(message.chat.id, help)
 
 
-@bot.message_handler(commands=['QR_setting'])
-def qr_setting_command(message):
-    # Отправляем сообщение с подтверждением
-    bot.send_message(message.chat.id, "Действительно хотите изменить настройки создания QR-кода? (да/нет)")
-    bot.register_next_step_handler(message, process_confirmation)
+# @bot.message_handler(commands=['QR_setting'])
+# def qr_setting_command(message):
+#     # Отправляем сообщение с подтверждением
+#     bot.send_message(message.chat.id, "Действительно хотите изменить настройки создания QR-кода? (да/нет)")
+#     bot.register_next_step_handler(message, process_confirmation)
+#
+#
+# def process_confirmation(message):
+#     if message.text.lower() == 'да':
+#         bot.send_message(message.chat.id,
+#                          "Введите ширину и длину картинки, а затем цвет заднего фона (формат: цвет ширина длина ).")
+#         bot.register_next_step_handler(message, process_dimensions)
+#     elif message.text.lower() == 'нет':
+#         bot.send_message(message.chat.id, "Настройки не изменены.")
+#     else:
+#         bot.send_message(message.chat.id, "Пожалуйста, ответьте 'да' или 'нет'.")
+#         bot.register_next_step_handler(message, process_confirmation)
+#
+#
+# def process_dimensions(message):
+#     try:
+#         chat_id = str(message.chat.id)
+#         color, width, height = message.text.split()
+#
+#         admin.update_setting_user(chat_id, color, width, height)
+#
+#         bot.send_message(message.chat.id,
+#                          f"Настройки QR-кода обновлены: ширина={width}, длина={height}.")
+#     except ValueError:
+#         bot.send_message(message.chat.id,
+#                          "Некорректный формат. Введите ширину, длину и цвет фона (формат: ширина длина цвет).")
+#         bot.register_next_step_handler(message, process_dimensions)
 
 
-def process_confirmation(message):
-    if message.text.lower() == 'да':
-        bot.send_message(message.chat.id,
-                         "Введите ширину и длину картинки, а затем цвет заднего фона (формат: цвет ширина длина ).")
-        bot.register_next_step_handler(message, process_dimensions)
-    elif message.text.lower() == 'нет':
-        bot.send_message(message.chat.id, "Настройки не изменены.")
-    else:
-        bot.send_message(message.chat.id, "Пожалуйста, ответьте 'да' или 'нет'.")
-        bot.register_next_step_handler(message, process_confirmation)
+@bot.message_handler(commands=["reset_color_QR"])
+def reset_color_QR(message):
+    chat_id = message.chat.id
 
-
-def process_dimensions(message):
-    try:
-        chat_id = str(message.chat.id)
-        color, width, height = message.text.split()
-
-
-        admin.update_setting_user(chat_id, color, width, height)
-
-        bot.send_message(message.chat.id,
-                         f"Настройки QR-кода обновлены: ширина={width}, длина={height}.")
-    except ValueError:
-        bot.send_message(message.chat.id,
-                         "Некорректный формат. Введите ширину, длину и цвет фона (формат: ширина длина цвет).")
-        bot.register_next_step_handler(message, process_dimensions)
 
 
 # ADMIN_COMMAND
