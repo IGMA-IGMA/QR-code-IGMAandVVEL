@@ -39,7 +39,7 @@ def clean_directory(directory_path):
             # Удаляем файлы
             if os.path.isfile(file_path) or os.path.islink(file_path):
                 os.unlink(file_path)
-                perechisl += (file_path + '\n')
+                perechisl += (file_path + "\n")
                 print(f"Файл {file_path} удален.")
         return perechisl
     return f"Запись данных в {directory_path} не было"

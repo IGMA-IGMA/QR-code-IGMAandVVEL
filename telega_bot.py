@@ -29,24 +29,33 @@ def send_welcome(message):
     bot.reply_to(message, Hello_text)
     if not admin.user_in_dbUser(str(chat_id)):
         admin.add_to_json("db_user_tg/id_user.json",
-                          {str(message.chat.id): [str(message.chat.username), {"COLOR": "black", "BACKCOLOR": "white"}]})
+                          {str(message.chat.id): [str(message.chat.username),
+                                                  {"COLOR": "black", "BACKCOLOR": "white"}]})
     else:
-        print('Пользователь уже в BD')
+        print("Пользователь уже в BD")
 
 
 @bot.message_handler(commands=["help"])
 def send_help(message):
+    chat_id = message.chat.id
     help = """
     Бот для создания QR
     """
-    bot.send_message(message.chat.id, help)
-
-@message_handler(commands=["my_setting"])
+    bot.send_message(chat_id, help)
 
 
-@bot.message_handler(commands=["reset_color_QR"])
-def reset_color_QR(message):
+@bot.message_handler(commands=["my_setting"])
+def my_setting(message):
     chat_id = message.chat.id
+    setting = admin.re_setting(str(chat_id))
+    re = f"""
+    Ваши настройки, {message.chat.username}
+    COLOR: {setting["COLOR"]}
+    BACKCOLOR: {setting["BACKCOLOR"]}
+    """
+    bot.send_message(chat_id, re)
+
+
 
 
 
@@ -80,7 +89,7 @@ def stop_bot(message):
     chat_id = str(message.chat.id)
     if admin.user_is_admin(chat_id):
         bot.stop_bot()
-    bot.send_message(chat_id, 'Вы вызвали не существующую команду')
+    bot.send_message(chat_id, "Вы вызвали не существующую команду")
 
 
 @bot.message_handler(commands=["spisok_admin"])
