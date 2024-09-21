@@ -3,24 +3,14 @@
         "username",
         {
             "COLOR": "color",
-            "WIDTH": "width",
-            "HEIGHT": "height"
+            "BACKCOLOR": "color"
         }
     ],
     "1185507660": [
         "IGMAos",
         {
             "COLOR": "black",
-            "WIDTH": "290",
-            "HEIGHT": "290"
-        }
-    ],
-    "1086035762": [
-        "Gopro444",
-        {
-            "COLOR": "black",
-            "WIDTH": "290",
-            "HEIGHT": "290"
+            "BACKCOLOR": "white"
         }
     ]
 }

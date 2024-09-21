@@ -3,8 +3,20 @@ import cv2
 import os
 import os.path
 
+qr = qrcode.QRCode(
+    version=1,
+    error_correction=qrcode.constants.ERROR_CORRECT_L,
+    box_size=10,
+    border=4,
+)
 
-def creating_QR_code(link: str, where: str):
+
+def creating_QR_code(link: str, where: str, COLOR="black", BACKCOLOR="white"):
+    qr.add_data(link)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color=COLOR, back_color=BACKCOLOR)
+
     if where == "w":
         if len(link) == 0 or link == " ":
             print("Переданно пустое значение")
@@ -12,7 +24,6 @@ def creating_QR_code(link: str, where: str):
 
         l = len(os.listdir("static/imagesQR/images_save"))
 
-        img = qrcode.make(link)
         img.save(f"static/imagesQR/images_save/{l + 1}.png")
         try:
             print("Успешно")
@@ -22,13 +33,11 @@ def creating_QR_code(link: str, where: str):
 
     if where == "t":
         l = len(os.listdir("telega_db/imagesQR/images_save"))
-        img = qrcode.make(link)
         img.save(f"telega_db/imagesQR/images_save/{l + 1}.png")
         return f"telega_db/imagesQR/images_save/{l + 1}.png"
 
 
 def recognize_qr_code_and_print_link(image_path: str):
-
     img = cv2.imread(image_path)
 
     qr_code_detector = cv2.QRCodeDetector()

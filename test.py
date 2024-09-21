@@ -1,34 +1,41 @@
-import telebot
-from telebot import types
-import my_token
+import qrcode
+import os
 
-# Ваш токен от BotFather
-TOKEN = my_token.Token
-bot = telebot.TeleBot(TOKEN)
+qr = qrcode.QRCode(
+    version=1,
+    error_correction=qrcode.constants.ERROR_CORRECT_L,
+    box_size=10,
+    border=4,
+)
+def creating_QR_code(link: str, where: str, COLOR="black", BACKCOLOR="white"):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
 
+    qr.add_data(link)
+    qr.make(fit=True)
 
-# Команда /start
-@bot.message_handler(commands=['start'])
-def send_welcome(message):
-    # Создаем инлайн-клавиатуру
-    markup = types.InlineKeyboardMarkup(row_width=2)
-
-    # Добавляем инлайн-кнопки с callback_data
-    btn1 = types.InlineKeyboardButton("Кнопка 1", callback_data="btn1")
-    btn2 = types.InlineKeyboardButton("Кнопка 2", callback_data="btn2")
-    markup.add(btn1, btn2)
-
-    bot.send_message(message.chat.id, "Нажмите на кнопку:", reply_markup=markup)
-
-
-# Обработка нажатий на инлайн-кнопки
-@bot.callback_query_handler(func=lambda call: True)
-def handle_callback(call):
-    if call.data == "btn1":
-        bot.send_message(call.message.chat.id, "Вы нажали кнопку 1")
-    elif call.data == "btn2":
-        bot.send_message(call.message.chat.id, "Вы нажали кнопку 2")
+    img = qr.make_image(fill_color=COLOR, back_color=BACKCOLOR)
 
 
-# Запуск бота
-bot.polling(none_stop=True)
+    if where == "w":
+        if len(link) == 0 or link == " ":
+            print("Переданно пустое значение")
+            return "site_images/ErrorGenerate.png", "Generate Error"
+
+        l = len(os.listdir("static/imagesQR/images_save"))
+
+        img.save(f"static/imagesQR/images_save/{l + 1}.png")
+        try:
+            print("Успешно")
+            return f"imagesQR/images_save/{l + 1}.png", "Успешно"
+        except:
+            return "site_images/ErrorGenerate.png", "Generate Error"
+
+    if where == "t":
+        l = len(os.listdir("telega_db/imagesQR/images_save"))
+        img.save(f"telega_db/imagesQR/images_save/{l + 1}.png")
+        return f"telega_db/imagesQR/images_save/{l + 1}.png"
