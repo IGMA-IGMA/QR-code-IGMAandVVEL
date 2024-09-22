@@ -9,8 +9,12 @@
     "1185507660": [
         "IGMAos",
         {
-            "COLOR": "black",
-            "BACKCOLOR": "white"
+            "COLOR": [
+                0,
+                0,
+                0
+            ],
+            "BACKCOLOR": "#fffff1"
         }
     ],
     "959742702": [

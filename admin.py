@@ -3,12 +3,7 @@ import os
 
 
 def add_to_json(file_path, new_data):
-    """
-    Добавляет новое значение в JSON файл.
 
-    :param file_path: Путь к JSON файлу.
-    :param new_data: Новый словарь для добавления в JSON файл.
-    """
     try:
         # Проверка существования файла
         if not os.path.exists(file_path):
@@ -68,7 +63,7 @@ def update_setting(chat_id, chang, new_data):
     json_file.close()
 
 
-def re_setting(chat_id):
+def return_setting(chat_id):
     with open("db_user_tg/id_user.json", "r", encoding="utf-8") as json_file:
         file = json.load(json_file)
     json_file.close()

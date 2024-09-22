@@ -12,6 +12,10 @@ qr = qrcode.QRCode(
 
 
 def creating_QR_code(link: str, where: str, COLOR="black", BACKCOLOR="white"):
+    if type(COLOR) is list:
+        COLOR = tuple(COLOR)
+    if type(BACKCOLOR) is list:
+        BACKCOLOR = tuple(BACKCOLOR)
     qr.add_data(link)
     qr.make(fit=True)
 
@@ -43,6 +47,7 @@ def recognize_qr_code_and_print_link(image_path: str):
     qr_code_detector = cv2.QRCodeDetector()
 
     data, bbox, _ = qr_code_detector.detectAndDecode(img)
+    print(data)
 
     if data:
         return data, True
