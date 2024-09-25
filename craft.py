@@ -3,15 +3,13 @@ import cv2
 import os
 import os.path
 
-qr = qrcode.QRCode(
-    version=1,
-    error_correction=qrcode.constants.ERROR_CORRECT_L,
-    box_size=10,
-    border=4,
-)
-
-
-def creating_QR_code(link: str, where: str, COLOR="black", BACKCOLOR="white"):
+def creating_QR_code(link: str, where: str, COLOR, BACKCOLOR):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
     if type(COLOR) is list:
         COLOR = tuple(COLOR)
     if type(BACKCOLOR) is list:
@@ -19,8 +17,8 @@ def creating_QR_code(link: str, where: str, COLOR="black", BACKCOLOR="white"):
     qr.add_data(link)
     qr.make(fit=True)
 
-    img = qr.make_image(fill_color=COLOR, back_color=BACKCOLOR)
-
+    img = qr.make_image(fill_color='green', back_color=BACKCOLOR)
+    print(COLOR, BACKCOLOR)
     if where == "w":
         if len(link) == 0 or link == " ":
             print("Переданно пустое значение")

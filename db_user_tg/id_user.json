@@ -10,17 +10,21 @@
         "IGMAos",
         {
             "COLOR": [
-                0,
-                0,
-                0
+                1,
+                250,
+                250
             ],
-            "BACKCOLOR": "#fffff1"
+            "BACKCOLOR": [
+                234,
+                132,
+                222
+            ]
         }
     ],
     "959742702": [
         "Olyvel",
         {
-            "COLOR": "black",
+            "COLOR": "cyan",
             "BACKCOLOR": "white"
         }
     ]

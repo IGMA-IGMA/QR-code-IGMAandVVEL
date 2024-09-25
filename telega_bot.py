@@ -48,7 +48,7 @@ def send_help(message):
 @bot.message_handler(commands=["my_setting"])
 def my_setting(message):
     chat_id = message.chat.id
-    setting = admin.re_setting(str(chat_id))
+    setting = admin.return_setting(str(chat_id))
     re = f"""
     Ваши настройки, {message.chat.username}
     COLOR: {setting["COLOR"]}
@@ -135,7 +135,7 @@ def handle_rgb_input(message, source):
     if patern_color.validate_rgb(rgb_color):
         selected_color = tuple(map(int, rgb_color.split(',')))
         bot.send_message(message.chat.id, f"Цвет {rgb_color} корректен в формате RGB. Цвет {'QR-кода' if source == 'COLOR' else 'фона QR-кода'} установлен.")
-        admin.update_setting(str(message.chat.id), source, selected_color)
+        admin.update_setting(str(message.chat.id), source, tuple(selected_color))
     else:
         bot.send_message(message.chat.id, "Некорректный формат RGB. Попробуйте снова.")
         bot.register_next_step_handler(message, handle_rgb_input, source)
