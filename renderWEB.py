@@ -1,12 +1,14 @@
 from flask import Flask, render_template, request
+from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
 import creatDIR
 import craft
 import os
 
 
-app = Flask(__name__)
 
+app = Flask(__name__)
+bootstrap = Bootstrap(app)
 
 @app.route("/")
 @app.route("/Home Page", methods=["GET"])
