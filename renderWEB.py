@@ -7,7 +7,7 @@ import os
 
 
 
-app = Flask(__name__)
+app = Flask(__name__)r
 bootstrap = Bootstrap(app)
 
 @app.route("/")
