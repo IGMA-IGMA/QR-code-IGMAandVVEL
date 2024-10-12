@@ -3,21 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <title>Creating your QR-code</title>
+    <link rel="stylesheet" href="./static/css/style.css">
 </head>
 <body>
 <h1>Создавай QR-code для чего угодно</h1>
-</body>
 
 <form action="/submit" method="POST">
     <label for="user_input">Ваша ссылка: </label>
     <input type="text" id="user_input" name="user_input">
     <button type="submit">Отправить</button>
-    <h1>Статус генерации: {{ status_gen }}</h1>
 </form>
+
+<form action="/submit" method="POST">
+    <div class="dropdown">
+        <button class="dropbtn">Выпадающее</button>
+        <div class="dropdown-content">
+            <button type="submit">55</button>
+            <a href="#">55</a>
+        </div>
+    </div>
+</form>
+
+{% if trip_img %}
+<h1>Статус генерации: {{ status_gen }}</h1>
 <h1>Ваш QR-code:</h1>
-<body>
-    <img src= "{{url_for("static", filename=trip_img)}}" width="250" height="250">
+
+<!-- Контейнер для кнопки и изображения -->
+<div class="qr-container">
+    <!-- Кнопка для копирования изображения над изображением -->
+    <button class="button" onclick="copyImage()">Скопировать QR-код</button>
+
+    <!-- QR-код -->
+    <img id="qrImage" src="{{url_for("static", filename=trip_img)}}" width="250" height="250" alt="Ваш QR-код">
+</div>
+
+<!-- Всплывающее уведомление -->
+<div id="successMessage" class="popup-message">
+    QR-код успешно скопирован!
+</div>
+{% endif %}
+
+<script>
+    async function copyImage() {
+        try {
+            const image = document.getElementById('qrImage');
+            const response = await fetch(image.src);
+            const blob = await response.blob();
+            const data = [new ClipboardItem({ [blob.type]: blob })];
+
+            await navigator.clipboard.write(data);
+
+            // Показываем всплывающее сообщение
+            const message = document.getElementById('successMessage');
+            message.classList.add('popup-show');
+
+            // Убираем сообщение через 2 секунды
+            setTimeout(() => {
+                message.classList.remove('popup-show');
+            }, 2000);
+        } catch (err) {
+            console.error('Не удалось скопировать изображение:', err);
+        }
+    }
+</script>
+
 </body>
-
-
 </html>

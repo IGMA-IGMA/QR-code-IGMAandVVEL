@@ -3,7 +3,7 @@ import cv2
 import os
 import os.path
 
-def creating_QR_code(link: str, where: str, COLOR, BACKCOLOR):
+def creating_QR_code(link: str, where: str, COLOR="black", BACKCOLOR="white"):
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -17,10 +17,10 @@ def creating_QR_code(link: str, where: str, COLOR, BACKCOLOR):
     qr.add_data(link)
     qr.make(fit=True)
 
-    img = qr.make_image(fill_color='green', back_color=BACKCOLOR)
+    img = qr.make_image(fill_color=COLOR, back_color=BACKCOLOR)
     print(COLOR, BACKCOLOR)
     if where == "w":
-        if len(link) == 0 or link == " ":
+        if len(link) == 0 or link == " " or link == None:
             print("Переданно пустое значение")
             return "site_images/ErrorGenerate.png", "Generate Error"
 

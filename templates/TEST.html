@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Копирование изображения</title>
+    <style>
+        .button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            display: none;
+            color: green;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <img id="imageToCopy" src="https://via.placeholder.com/150" alt="Изображение для копирования" hidden>
+
+    <button class="button" onclick="copyImage()">Скопировать изображение</button>
+    <p class="message" id="successMessage">Успешно скопировано!</p>
+
+    <script>
+        async function copyImage() {
+            try {
+                const image = document.getElementById('imageToCopy');
+                const response = await fetch(image.src);
+                const blob = await response.blob();
+                const data = [new ClipboardItem({ [blob.type]: blob })];
+
+                await navigator.clipboard.write(data);
+
+                // Показываем сообщение об успехе
+                const message = document.getElementById('successMessage');
+                message.style.display = 'block';
+
+                // Убираем сообщение через 2 секунды
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 2000);
+            } catch (err) {
+                console.error('Не удалось скопировать изображение:', err);
+            }
+        }
+    </script>
+</body>
+</html>

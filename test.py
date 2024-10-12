@@ -1,42 +1,82 @@
-import telebot
-from telebot.types import ReplyKeyboardMarkup, KeyboardButton
-import my_token
-import test1
-import admin
+import requests
+import re
 
-# Вставьте сюда ваш токен
-bot = telebot.TeleBot(my_token.Token)
+def check_with_google_safe_browsing(api_key, url):
+    safe_browsing_url = "https://safebrowsing.googleapis.com/v4/threatMatches:find"
+    payload = {
+        "client": {
+            "clientId": "yourcompanyname",
+            "clientVersion": "1.0"
+        },
+        "threatInfo": {
+            "threatTypes": ["MALWARE", "SOCIAL_ENGINEERING"],
+            "platformTypes": ["ANY_PLATFORM"],
+            "threatEntryTypes": ["URL"],
+            "threatEntries": [{"url": url}]
+        }
+    }
+
+    params = {'key': api_key}
+    response = requests.post(safe_browsing_url, json=payload, params=params)
+
+    if response.status_code == 200:
+        result = response.json()
+        if 'matches' in result:
+            return "URL is unsafe according to Google Safe Browsing."
+        else:
+            return "URL is safe according to Google Safe Browsing."
+    else:
+        return f"Error: {response.status_code}"
 
 
-colors = ["black", "white", "red", "green", "blue", "yellow", "gray", "orange", "purple", "pink"]
+def check_with_virustotal(api_key, url):
+    vt_url = "https://www.virustotal.com/vtapi/v2/url/report"
+    params = {'apikey': api_key, 'resource': url}
+    response = requests.get(vt_url, params=params)
 
-# Функция для создания клавиатуры с кнопками
-def create_keyboard():
-    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-    buttons = [KeyboardButton(color) for color in colors]  # Используем названия цветов для кнопок
-    keyboard.add(*buttons)
-    return keyboard
+    if response.status_code == 200:
+        result = response.json()
+        if result['response_code'] == 1:
+            # Отображение детализированной информации о результатах сканирования
+            positives = result.get('positives', 0)
+            total = result.get('total', 0)
+            if positives > 0:
+                return f"URL is flagged as malicious by {positives} out of {total} sources."
+            else:
+                return "URL is safe according to VirusTotal."
+        else:
+            return "URL not found in VirusTotal database."
+    else:
+        return f"Error: {response.status_code}"
 
-# Обработчик команды reset_background_color_qr
-@bot.message_handler(commands=["reset_background_color_qr"])
-def handle_reset_background_color_qr(message):
-    create_keyboard()
-    bot.send_message(message.chat.id, "Выберите цвет фона:", reply_markup=keyboard)
 
-# Обработчик команды reset_color_qr
-@bot.message_handler(commands=["reset_color_qr"])
-def handle_reset_color_qr(message):
-    keyboard = create_keyboard()
-    bot.send_message(message.chat.id, "Выберите цвет текста:", reply_markup=keyboard)
+def check_url(url, google_api_key, vt_api_key):
+    results = []
 
-# Обработчик кнопок
-@bot.message_handler(func=lambda message: True)
-def handle_buttons(message):
-    if message.text in colors:
-        if message.reply_to_message and "Выберите цвет фона:" in message.reply_to_message.text:
-            bot.send_message(message.chat.id, f"Вы выбрали цвет фона: {message.text}")
-        elif message.reply_to_message and "Выберите цвет текста:" in message.reply_to_message.text:
-            bot.send_message(message.chat.id, f"Вы выбрали цвет текста: {message.text}")
+    # Проверка с Google Safe Browsing
+    gs_result = check_with_google_safe_browsing(google_api_key, url)
+    results.append(gs_result)
 
-# Запуск бота
-bot.polling()
+    # Проверка с VirusTotal
+    vt_result = check_with_virustotal(vt_api_key, url)
+    results.append(vt_result)
+
+    # Дополнительные проверки структуры URL
+    if not url.startswith("https://"):
+        results.append("URL is not using HTTPS, which could indicate a security risk.")
+
+    if contains_suspicious_chars(url):
+        results.append("URL contains suspicious characters, possibly a phishing attempt.")
+
+    return "\n".join(results)
+
+def contains_suspicious_chars(url):
+    suspicious_patterns = [r'\.\.', r'@', r'%', r'!', r'\.exe', r'\\']
+    for pattern in suspicious_patterns:
+        if re.search(pattern, url):
+            return True
+    return False
+
+url_to_check = "http://example.com"
+status = check_url(url_to_check)
+print(status)

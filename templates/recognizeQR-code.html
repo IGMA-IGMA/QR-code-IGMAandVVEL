@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <title>{{ title }}</title>
 </head>
-
+<form>
 <body>
-<h1>Распознать QR-code</h1>
+    <h1>Распознать QR-code</h1>
 </body>
-
+</form>
 <form action="/upload" method="POST" enctype="multipart/form-data">
     <label for="user_input">Ваше изображение: </label>
     <input type="file" name="image" accept="image/.jpg,.png">
     <button type="submit">Загрузить</button>
 </form>
-
-<a href=link>Ваша ссылка</a>
-
+{% if link %}
+<a href="{{ link }}">Ваша ссылка</a>
+{% else %}
+<body>Тут будет Ваша Ссылка</body>
+{% endif %}
 </html>
