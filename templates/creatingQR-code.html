@@ -30,41 +30,17 @@
 
 <!-- Контейнер для кнопки и изображения -->
 <div class="qr-container">
-    <!-- Кнопка для копирования изображения над изображением -->
-    <button class="button" onclick="copyImage()">Скопировать QR-код</button>
+    <!-- Кнопка для копирования изображения -->
+    <button id="copyButton" onclick="copyQRCode()">Копировать QR-код</button>
+    <img id="qrImage" src="{{url_for('static', filename=trip_img)}}" width="250" height="250" alt="Ваш QR-код">
 
-    <!-- QR-код -->
-    <img id="qrImage" src="{{url_for("static", filename=trip_img)}}" width="250" height="250" alt="Ваш QR-код">
+    <!-- Уведомление -->
+    <div id="copyNotification">QR-код скопирован в буфер обмена!</div>
 </div>
 
-<!-- Всплывающее уведомление -->
-<div id="successMessage" class="popup-message">
-    QR-код успешно скопирован!
-</div>
 {% endif %}
 
-<script>
-    async function copyImage() {
-        try {
-            const image = document.getElementById('qrImage');
-            const response = await fetch(image.src);
-            const blob = await response.blob();
-            const data = [new ClipboardItem({ [blob.type]: blob })];
-
-            await navigator.clipboard.write(data);
-
-            // Показываем всплывающее сообщение
-            const message = document.getElementById('successMessage');
-            message.classList.add('popup-show');
-
-            // Убираем сообщение через 2 секунды
-            setTimeout(() => {
-                message.classList.remove('popup-show');
-            }, 2000);
-        } catch (err) {
-            console.error('Не удалось скопировать изображение:', err);
-        }
-    }
+<script src="static/js/copyQRCode.js">
 </script>
 
 </body>
