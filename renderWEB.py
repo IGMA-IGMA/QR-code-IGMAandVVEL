@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request
-from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
 import creatDIR
 import craft
@@ -9,7 +8,6 @@ import URLaddress
 
 
 app = Flask(__name__)
-bootstrap = Bootstrap(app)
 
 RAINBOW_COLORS = ['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'violet']
 @app.route("/")
